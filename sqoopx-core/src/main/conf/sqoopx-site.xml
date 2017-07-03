@@ -1,0 +1,22 @@
+<configuration>
+    <property>
+        <name>sqoopx.launcher.job.logs.dir</name>
+        <value>logs/</value>
+        <description>job logs dir</description>
+    </property>
+    <property>
+        <name>sqoopx.jar.output.dir</name>
+        <value>/Users/meepai/tmp/jars</value>
+        <description>jar output dir</description>
+    </property>
+    <property>
+        <name>sqoopx.temporary.root.dir</name>
+        <value>/test/temporary</value>
+        <description>the temporary dir in hdfs, which is used to store the temp file for append mode import.</description>
+    </property>
+    <property>
+        <name>sqoopx.temporary.dir</name>
+        <value>/Users/meepai/tmp/jars</value>
+        <description>the local temporary dir, which is used to store the temp files like script files, etc.</description>
+    </property>
+</configuration>
