@@ -9,4 +9,4 @@ There are some questions:
 2. Can we use the tools on spark?
 3. Can we export to a data source other than relational database? Such as MQ, or Redis.
 
-So, we want to extend it or resolve the three questions.
+So, we want to extend it to resolve the three questions.
