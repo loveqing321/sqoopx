@@ -1,0 +1,2 @@
+# sqoopx
+sqoopx project init
