@@ -4,7 +4,7 @@ import com.deppon.hadoop.sqoopx.core.cli.OptionFactory;
 import com.deppon.hadoop.sqoopx.core.cli.RelatedOptions;
 import com.deppon.hadoop.sqoopx.core.cli.ToolOptions;
 import com.deppon.hadoop.sqoopx.core.exception.InvalidOptionsException;
-import com.deppon.hadoop.sqoopx.core.jdbc.DBType;
+import com.deppon.hadoop.sqoopx.core.metadata.jdbc.DBType;
 import org.apache.commons.cli.CommandLine;
 
 /**

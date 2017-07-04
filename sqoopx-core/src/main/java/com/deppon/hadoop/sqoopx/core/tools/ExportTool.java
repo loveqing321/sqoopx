@@ -1,10 +1,16 @@
 package com.deppon.hadoop.sqoopx.core.tools;
 
 import com.deppon.hadoop.sqoopx.core.conf.ConfigurationHelper;
-import com.deppon.hadoop.sqoopx.core.mapreduce.*;
+import com.deppon.hadoop.sqoopx.core.mapreduce.ExportRecordMapper;
+import com.deppon.hadoop.sqoopx.core.mapreduce.Record;
+import com.deppon.hadoop.sqoopx.core.mapreduce.SimpleRecord;
+import com.deppon.hadoop.sqoopx.core.metadata.FilterMetadataManager;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
+import com.deppon.hadoop.sqoopx.core.metadata.jdbc.JdbcMetadataManagerFactory;
 import com.deppon.hadoop.sqoopx.core.options.ExportOptionsConfigurer;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.deppon.hadoop.sqoopx.core.tools.job.HdfsExportJob;
+import com.deppon.hadoop.sqoopx.core.tools.job.HiveExportJob;
 import com.deppon.hadoop.sqoopx.core.tools.job.SqoopxJob;
 import com.deppon.hadoop.sqoopx.core.tools.job.SqoopxJobContext;
 import javassist.CannotCompileException;
@@ -45,28 +51,32 @@ public class ExportTool extends BaseSqoopxTool {
         // 如果指定了要更新的列
         if(options.getUpdateKeyCol() != null){
             // 配置输出列的顺序
-//            this.connManager.
-
             // 如果是只更新模式
             if(options.getUpdateMode() == SqoopxOptions.UpdateMode.UpdateOnly){
-
             } else {
                 // 默认是允许插入的模式
             }
+            // TODO
+            log.error("暂没提供实现！");
         } else if(options.getCall() != null) {
             // TODO
             log.error("暂没提供存储过程实现！");
         } else {
-            SqoopxJob job = new HdfsExportJob();
-            SqoopxJobContext context = new SqoopxJobContext(options, this);
+            // 初始化metadataManager
+            // 如果是从关系型数据库导入,目前只用户关系型数据库的导入
+            MetadataManager wrapped = new JdbcMetadataManagerFactory(options).getManager();
+            this.setMetadataManager(new FilterMetadataManager(wrapped));
+            // 构建任务执行上下文
+            SqoopxJobContext context = buildContext(options);
+            SqoopxJob job;
+            // 以hcatlog方式导出hive数据
+            if(options.getHCatTableName() != null){
+                job = new HiveExportJob();
+            } else {  // 导出hdfs数据
+                job = new HdfsExportJob();
+            }
             job.run(context);
         }
-//        // 生成jar包
-//        String jarFile = this.generateJar();
-//        // 构建job
-//        Job job = this.buildJob(jarFile, options);
-//        // job执行
-//        job.waitForCompletion(true);
         return 0;
     }
 

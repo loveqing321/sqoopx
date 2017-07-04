@@ -1,7 +1,6 @@
-package com.deppon.hadoop.sqoopx.core.jdbc;
+package com.deppon.hadoop.sqoopx.core.metadata.jdbc;
 
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
-import org.apache.hive.jdbc.HiveStatement;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -96,33 +95,6 @@ public class HiveJdbcConnManager {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    private class HiveLogThread extends Thread {
-
-        private HiveStatement hiveStmt;
-
-        public HiveLogThread(Statement stmt){
-            hiveStmt = (HiveStatement) stmt;
-        }
-
-        @Override
-        public void run() {
-            try {
-                while(!hiveStmt.isClosed() && !Thread.currentThread().isInterrupted() && hiveStmt.hasMoreLogs()){
-                    System.out.println("aaaa");
-                    for(String ql : hiveStmt.getQueryLog(true, 1)){
-                        System.out.println("bbbb");
-                        log.info(ql);
-                    }
-                    Thread.sleep(500);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                Thread.interrupted();
-            }
         }
     }
 }

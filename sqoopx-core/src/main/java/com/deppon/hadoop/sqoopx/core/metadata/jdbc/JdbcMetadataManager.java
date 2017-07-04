@@ -1,5 +1,6 @@
-package com.deppon.hadoop.sqoopx.core.jdbc;
+package com.deppon.hadoop.sqoopx.core.metadata.jdbc;
 
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.google.common.base.Preconditions;
 
@@ -10,7 +11,7 @@ import java.util.Properties;
 /**
  * Created by meepai on 2017/6/22.
  */
-public abstract class JdbcConnManager implements ConnManager {
+public abstract class JdbcMetadataManager implements MetadataManager {
 
     protected Statement lastStatement;
 
@@ -30,7 +31,7 @@ public abstract class JdbcConnManager implements ConnManager {
 
     protected Connection lastConnection;
 
-    public JdbcConnManager(SqoopxOptions options){
+    public JdbcMetadataManager(SqoopxOptions options){
         Preconditions.checkArgument(options.getConnectString() != null);
         this.options = options;
         this.init();

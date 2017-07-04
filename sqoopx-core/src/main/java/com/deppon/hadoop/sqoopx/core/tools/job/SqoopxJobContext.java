@@ -1,5 +1,6 @@
 package com.deppon.hadoop.sqoopx.core.tools.job;
 
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.deppon.hadoop.sqoopx.core.tools.SqoopxTool;
 
@@ -13,9 +14,12 @@ public class SqoopxJobContext {
 
     private SqoopxTool sqoopxTool;
 
-    public SqoopxJobContext(SqoopxOptions options, SqoopxTool sqoopxTool) {
+    private MetadataManager metadataManager;
+
+    public SqoopxJobContext(SqoopxOptions options, SqoopxTool sqoopxTool, MetadataManager metadataManager) {
         this.options = options;
         this.sqoopxTool = sqoopxTool;
+        this.metadataManager = metadataManager;
     }
 
     public SqoopxOptions getOptions() {
@@ -32,5 +36,13 @@ public class SqoopxJobContext {
 
     public void setSqoopxTool(SqoopxTool sqoopxTool) {
         this.sqoopxTool = sqoopxTool;
+    }
+
+    public MetadataManager getMetadataManager() {
+        return metadataManager;
+    }
+
+    public void setMetadataManager(MetadataManager metadataManager) {
+        this.metadataManager = metadataManager;
     }
 }

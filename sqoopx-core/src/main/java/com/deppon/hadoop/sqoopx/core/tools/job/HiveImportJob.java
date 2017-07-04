@@ -2,8 +2,7 @@ package com.deppon.hadoop.sqoopx.core.tools.job;
 
 import com.deppon.hadoop.sqoopx.core.file.FileLayout;
 import com.deppon.hadoop.sqoopx.core.hive.HiveScriptBuilder;
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
-import com.deppon.hadoop.sqoopx.core.jdbc.HiveJdbcConnManager;
+import com.deppon.hadoop.sqoopx.core.metadata.jdbc.HiveJdbcConnManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.fs.FileSystem;
@@ -21,8 +20,8 @@ public class HiveImportJob extends HdfsImportJob {
 
     private static final Logger log = Logger.getLogger(HiveImportJob.class);
 
-    public HiveImportJob(ConnManager connManager){
-        super("sqoopx-hive-import-", connManager);
+    public HiveImportJob(){
+        super("sqoopx-hive-import-");
     }
     @Override
     protected void doRun(SqoopxJobContext context) throws Exception {
@@ -46,7 +45,7 @@ public class HiveImportJob extends HdfsImportJob {
         if(outputTable == null){
             outputTable = inputTable;
         }
-        HiveScriptBuilder builder = new HiveScriptBuilder(options, connManager, inputTable, outputTable, options.getConf());
+        HiveScriptBuilder builder = new HiveScriptBuilder(options, metadataManager, inputTable, outputTable, options.getConf());
         try {
             String createTableStr = builder.getCreateTableStmt();
             String loadDataStr = builder.getLoadDataStmt();

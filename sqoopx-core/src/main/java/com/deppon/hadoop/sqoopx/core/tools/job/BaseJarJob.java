@@ -2,8 +2,8 @@ package com.deppon.hadoop.sqoopx.core.tools.job;
 
 import com.deppon.hadoop.sqoopx.core.codegen.ClassWriter;
 import com.deppon.hadoop.sqoopx.core.codegen.CodeGenerator;
-import com.deppon.hadoop.sqoopx.core.codegen.JdbcClassWriter;
-import com.deppon.hadoop.sqoopx.core.tools.BaseSqoopxTool;
+import com.deppon.hadoop.sqoopx.core.codegen.DefaultClassWriter;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +16,11 @@ public abstract class BaseJarJob extends BaseJob {
 
     public static final String DEFAULT_JAR_PREFIX = "sqoopx-codegen";
 
+    private String jarPrefix = DEFAULT_JAR_PREFIX;
+
     protected CodeGenerator codeGenerator;
 
-    private String jarPrefix = DEFAULT_JAR_PREFIX;
+    protected MetadataManager metadataManager;
 
     public BaseJarJob(){}
 
@@ -27,8 +29,9 @@ public abstract class BaseJarJob extends BaseJob {
     }
 
     public void run(SqoopxJobContext context) throws Exception {
+        this.metadataManager = context.getMetadataManager();
         String jarFile = context.getOptions().getJarOutputDir() + File.separator + jarPrefix + System.currentTimeMillis() + ".jar";
-        ClassWriter classWriter = new JdbcClassWriter(context.getOptions(), ((BaseSqoopxTool)context.getSqoopxTool()).getConnManager());
+        ClassWriter classWriter = new DefaultClassWriter(context.getOptions(), metadataManager);
         this.codeGenerator = CodeGenerator.generateOrmJar(classWriter, jarFile);
         try {
             this.doRun(context);

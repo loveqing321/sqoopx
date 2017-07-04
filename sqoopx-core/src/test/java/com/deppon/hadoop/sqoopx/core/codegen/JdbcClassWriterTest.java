@@ -1,7 +1,7 @@
 package com.deppon.hadoop.sqoopx.core.codegen;
 
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
-import com.deppon.hadoop.sqoopx.core.jdbc.SqlConnManager;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
+import com.deppon.hadoop.sqoopx.core.metadata.jdbc.SqlMetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -24,8 +24,8 @@ public class JdbcClassWriterTest {
         options.setTableName("test_word");
         options.contribute();
 
-        ConnManager connManager = new SqlConnManager(options);
-        JdbcClassWriter classWriter = new JdbcClassWriter(options, connManager);
+        MetadataManager connManager = new SqlMetadataManager(options);
+        DefaultClassWriter classWriter = new DefaultClassWriter(options, connManager);
 
         CtClass ctClass = classWriter.writeClassToPool();
         ctClass.writeFile("/Users/meepai/tmp");

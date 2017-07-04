@@ -1,4 +1,4 @@
-package com.deppon.hadoop.sqoopx.core.jdbc;
+package com.deppon.hadoop.sqoopx.core.metadata.jdbc;
 
 import java.sql.Connection;
 

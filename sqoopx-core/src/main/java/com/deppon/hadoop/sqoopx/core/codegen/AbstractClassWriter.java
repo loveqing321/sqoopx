@@ -6,7 +6,7 @@ import javassist.CtClass;
 /**
  * Created by meepai on 2017/6/25.
  */
-public abstract class BaseClassWriter implements ClassWriter {
+public abstract class AbstractClassWriter implements ClassWriter {
 
     protected ClassPool classPool = new ClassPool(true);
 
