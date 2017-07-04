@@ -1,19 +1,22 @@
-package com.deppon.hadoop.sqoopx.core.jdbc;
+package com.deppon.hadoop.sqoopx.core.metadata.jdbc;
 
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by meepai on 2017/6/22.
  */
-public class SqlConnManager extends JdbcConnManager {
+public class SqlMetadataManager extends JdbcMetadataManager {
 
-    private static final Logger log = Logger.getLogger(SqlConnManager.class);
+    private static final Logger log = Logger.getLogger(SqlMetadataManager.class);
 
-    public SqlConnManager(SqoopxOptions options) {
+    public SqlMetadataManager(SqoopxOptions options) {
         super(options);
     }
 

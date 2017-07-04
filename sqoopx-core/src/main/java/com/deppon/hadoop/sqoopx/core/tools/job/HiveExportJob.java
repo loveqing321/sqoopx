@@ -3,26 +3,26 @@ package com.deppon.hadoop.sqoopx.core.tools.job;
 import com.deppon.hadoop.sqoopx.core.codegen.DefaultClassWriter;
 import com.deppon.hadoop.sqoopx.core.conf.ConfigurationConstants;
 import com.deppon.hadoop.sqoopx.core.conf.ConfigurationHelper;
-import com.deppon.hadoop.sqoopx.core.file.FileLayout;
 import com.deppon.hadoop.sqoopx.core.mapreduce.ExportRecordMapper;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
-import com.deppon.hadoop.sqoopx.core.util.FileSystemUtils;
-import org.apache.hadoop.fs.Path;
+import com.deppon.hadoop.sqoopx.core.util.HCatHelper;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.db.DBConfiguration;
 import org.apache.hadoop.mapreduce.lib.db.DBOutputFormat;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hive.hcatalog.mapreduce.HCatInputFormat;
 
 import java.io.IOException;
 
 /**
  * Created by meepai on 2017/6/25.
  */
-public class HdfsExportJob extends BaseJarJob {
+public class HiveExportJob extends BaseJarJob {
 
-    public HdfsExportJob(){
-        super("sqoopx-hdfs-export-");
+    private HCatHelper hCatHelper;
+
+    public HiveExportJob(){
+        super("sqoopx-hive-export-");
     }
 
     @Override
@@ -33,18 +33,13 @@ public class HdfsExportJob extends BaseJarJob {
 
     @Override
     protected void configureInputFormat(Job job, SqoopxOptions options) throws IOException {
-        // 分为几种情况处理，  1. 处理hcatalog  2. 处理文件类型为AVRO  3. 处理文件类型为PARQUET
-        Path path = new Path(options.getExportDir());
-        try {
-            FileInputFormat.addInputPath(job, FileSystemUtils.makeQualified(path, job.getConfiguration()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(options.getFileLayout() == FileLayout.AvroFile){
-            // AvroInputFormat
-        } else if(options.getFileLayout() == FileLayout.ParquetFile){
-            // DatasetKeyInputFormat
-        }
+        // 1. 设置InputFormat
+
+
+        job.setInputFormatClass(HCatInputFormat.class);
+
+
+
     }
 
     @Override

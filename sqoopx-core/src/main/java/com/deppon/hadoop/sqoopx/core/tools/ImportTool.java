@@ -1,5 +1,8 @@
 package com.deppon.hadoop.sqoopx.core.tools;
 
+import com.deppon.hadoop.sqoopx.core.metadata.FilterMetadataManager;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
+import com.deppon.hadoop.sqoopx.core.metadata.jdbc.JdbcMetadataManagerFactory;
 import com.deppon.hadoop.sqoopx.core.options.ImportOptionsConfigurer;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.deppon.hadoop.sqoopx.core.tools.job.HdfsImportJob;
@@ -23,13 +26,17 @@ public class ImportTool extends BaseSqoopxTool {
         if(!init(options)){
             return 1;
         }
-        // 区分导入的是表还是查询
-        SqoopxJobContext context = new SqoopxJobContext(options, this);
+        // 初始化metadataManager
+        // 如果是从关系型数据库导入,目前只用户关系型数据库的导入
+        MetadataManager wrapped = new JdbcMetadataManagerFactory(options).getManager();
+        this.setMetadataManager(new FilterMetadataManager(wrapped));
+        // 构建任务执行上下文
+        SqoopxJobContext context = buildContext(options);
         SqoopxJob job;
         if(options.isHiveImport()){
-            job = new HiveImportJob(connManager);
+            job = new HiveImportJob();
         } else {
-            job = new HdfsImportJob(connManager);
+            job = new HdfsImportJob();
         }
         job.run(context);
         return 0;

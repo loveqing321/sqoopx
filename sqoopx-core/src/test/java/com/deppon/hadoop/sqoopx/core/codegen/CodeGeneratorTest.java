@@ -1,8 +1,8 @@
 package com.deppon.hadoop.sqoopx.core.codegen;
 
 import com.deppon.hadoop.sqoopx.core.exception.CodeGenerateException;
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
-import com.deppon.hadoop.sqoopx.core.jdbc.SqlConnManager;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
+import com.deppon.hadoop.sqoopx.core.metadata.jdbc.SqlMetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import org.apache.hadoop.conf.Configuration;
 
@@ -22,9 +22,9 @@ public class CodeGeneratorTest {
         options.setTableName("sys_user");
         options.contribute();
 
-        ConnManager connManager = new SqlConnManager(options);
+        MetadataManager connManager = new SqlMetadataManager(options);
 
-        ClassWriter classWriter = new JdbcClassWriter(options, connManager);
+        ClassWriter classWriter = new DefaultClassWriter(options, connManager);
 
         try {
             CodeGenerator.generateOrmJar(classWriter, "/Users/meepai/tmp/a1.jar");

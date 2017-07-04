@@ -1,8 +1,8 @@
 package com.deppon.hadoop.sqoopx.core.codegen;
 
 import com.deppon.hadoop.sqoopx.core.exception.ParseException;
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
 import com.deppon.hadoop.sqoopx.core.mapreduce.*;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.deppon.hadoop.sqoopx.core.util.IdentifierUtils;
 import com.deppon.hadoop.sqoopx.core.util.SqlUtils;
@@ -24,13 +24,13 @@ import java.util.Map;
 /**
  * Created by meepai on 2017/6/25.
  */
-public class JdbcClassWriter extends BaseClassWriter {
+public class DefaultClassWriter extends AbstractClassWriter {
 
     public static final String GENERATE_PACKAGE = Record.class.getPackage().getName() + ".generate";
 
     private SqoopxOptions options;
 
-    private ConnManager connManager;
+    private MetadataManager metadataManager;
 
     private String className;
 
@@ -42,11 +42,11 @@ public class JdbcClassWriter extends BaseClassWriter {
 
     private Map<String, String> fieldTypes = new HashMap<String, String>();
 
-    public JdbcClassWriter(SqoopxOptions options, ConnManager connManager){
+    public DefaultClassWriter(SqoopxOptions options, MetadataManager metadataManager){
         this.options = options;
-        this.connManager = connManager;
+        this.metadataManager = metadataManager;
         this.className = this.options.getClassName();
-        this.columnTypes = this.connManager.getColumnTypes();
+        this.columnTypes = this.metadataManager.getColumnTypes();
         this.columnNames = getColumnNames(this.columnTypes);
         // pool的导入工作
         this.classPool.importPackage(RecordReadBridge.class.getPackage().getName());
@@ -343,7 +343,7 @@ public class JdbcClassWriter extends BaseClassWriter {
      * @param clazz
      */
     private void generateCompareTo(ClassPool pool, CtClass clazz) throws NotFoundException, CannotCompileException {
-        String[] compareColumns = connManager.getPrimaryKeys();
+        String[] compareColumns = metadataManager.getPrimaryKeys();
         if(compareColumns == null || compareColumns.length == 0){
             compareColumns = columnNames;
         }

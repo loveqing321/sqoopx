@@ -2,7 +2,6 @@ package com.deppon.hadoop.sqoopx.core.tools.job;
 
 import com.deppon.hadoop.sqoopx.core.conf.ConfigurationHelper;
 import com.deppon.hadoop.sqoopx.core.exception.SqoopxException;
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
 import com.deppon.hadoop.sqoopx.core.mapreduce.ImportRecordMapper;
 import com.deppon.hadoop.sqoopx.core.mapreduce.RawKeyTextOuputFormat;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
@@ -28,21 +27,18 @@ public class HdfsImportJob extends BaseJarJob {
 
     protected Job job;
 
-    protected ConnManager connManager;
-
     private ClassLoader prevClassLoader;
 
     protected Path destination;
 
     protected FileSystem fs;
 
-    public HdfsImportJob(ConnManager connManager){
-        this("sqoopx-hdfs-import-", connManager);
+    public HdfsImportJob(){
+        super("sqoopx-hdfs-import-");
     }
 
-    public HdfsImportJob(String name, ConnManager connManager){
-        super(name);
-        this.connManager = connManager;
+    public HdfsImportJob(String prefix){
+        super(prefix);
     }
 
     @Override
@@ -120,7 +116,7 @@ public class HdfsImportJob extends BaseJarJob {
         } else if(options.getSqlQuery() != null){
             dbConf.setInputQuery(options.getSqlQuery());
         }
-        dbConf.setInputFieldNames(connManager.getColumnNames());
+        dbConf.setInputFieldNames(metadataManager.getColumnNames());
         if(options.getWhereClause() != null){
             dbConf.setInputConditions(options.getWhereClause());
         }

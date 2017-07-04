@@ -1,15 +1,15 @@
-package com.deppon.hadoop.sqoopx.core.jdbc;
+package com.deppon.hadoop.sqoopx.core.metadata.jdbc;
 
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 
 /**
  * Created by meepai on 2017/6/24.
  */
-public class ConnFactory {
+public class JdbcMetadataManagerFactory {
 
     private SqoopxOptions options;
 
-    public ConnFactory(SqoopxOptions options){
+    public JdbcMetadataManagerFactory(SqoopxOptions options){
         this.options = options;
     }
 
@@ -17,19 +17,19 @@ public class ConnFactory {
      * 获取连接管理器
      * @return
      */
-    public ConnManager getManager(){
-        ConnManager manager = null;
+    public JdbcMetadataManager getManager(){
+        JdbcMetadataManager manager = null;
         DBType type = DBType.from(this.options);
         if(type != null){
             switch(type){
                 case MYSQL:
-                    manager = new MysqlConnManager(this.options);
+                    manager = new MysqlMetadataManager(this.options);
                     break;
                 case ORACLE:
-                    manager = new OracleConnManager(this.options);
+                    manager = new OracleMetadataManager(this.options);
                     break;
                 case POSTGRES:
-                    manager = new GreeplumConnManager(this.options);
+                    manager = new GreeplumMetadataManager(this.options);
                     break;
                 // TODO 其他数据库暂不写
             }

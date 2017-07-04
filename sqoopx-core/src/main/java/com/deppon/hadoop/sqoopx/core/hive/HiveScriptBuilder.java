@@ -1,6 +1,6 @@
 package com.deppon.hadoop.sqoopx.core.hive;
 
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.deppon.hadoop.sqoopx.core.util.SqlUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +23,7 @@ public class HiveScriptBuilder {
 
     private SqoopxOptions options;
 
-    private ConnManager connManager;
+    private MetadataManager metadataManager;
 
     private String inputTable;
 
@@ -31,10 +31,10 @@ public class HiveScriptBuilder {
 
     private Configuration conf;
 
-    public HiveScriptBuilder(SqoopxOptions options, ConnManager connManager, String inputTable,
+    public HiveScriptBuilder(SqoopxOptions options, MetadataManager metadataManager, String inputTable,
                              String outputTable, Configuration conf) {
         this.options = options;
-        this.connManager = connManager;
+        this.metadataManager = metadataManager;
         this.inputTable = inputTable;
         this.outputTable = outputTable;
         this.conf = conf;
@@ -42,7 +42,7 @@ public class HiveScriptBuilder {
 
     public String getCreateTableStmt() throws IOException {
         Properties mapping = options.getMapColumnHive();
-        Map<String, Integer> columnTypes = connManager.getColumnTypes();
+        Map<String, Integer> columnTypes = metadataManager.getColumnTypes();
         String[] colNames = this.getColumnNames();
         StringBuilder sb = new StringBuilder();
         // 如果指定外部表目录 那么创建外部表
@@ -139,7 +139,7 @@ public class HiveScriptBuilder {
         if(columns != null){
             return columns;
         }
-        return connManager.getColumnNames();
+        return metadataManager.getColumnNames();
     }
 
     /**

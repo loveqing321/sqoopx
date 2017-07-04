@@ -1,6 +1,5 @@
 package com.deppon.hadoop.sqoopx.core.util;
 
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
 import com.mysql.jdbc.Driver;
 
@@ -13,8 +12,6 @@ import java.util.Enumeration;
  * Created by meepai on 2017/6/27.
  */
 public class Jars {
-
-
 
     /**
      * 获取驱动类所在jar

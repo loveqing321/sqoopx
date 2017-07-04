@@ -2,15 +2,13 @@ package com.deppon.hadoop.sqoopx.core.tools;
 
 import com.deppon.hadoop.sqoopx.core.cli.ToolOptions;
 import com.deppon.hadoop.sqoopx.core.exception.InvalidOptionsException;
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnFactory;
-import com.deppon.hadoop.sqoopx.core.jdbc.ConnManager;
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.OptionsConfigurer;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
+import com.deppon.hadoop.sqoopx.core.tools.job.SqoopxJobContext;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.apache.hadoop.conf.Configuration;
-
-import java.io.IOException;
 
 /**
  * 基础的Sqoopx工具类，将与配置相关的任务委托给OptionsConfigurer处理。
@@ -18,9 +16,9 @@ import java.io.IOException;
  */
 public abstract class BaseSqoopxTool extends SqoopxTool {
 
-    protected OptionsConfigurer configurer;
+    protected MetadataManager metadataManager;
 
-    protected ConnManager connManager;
+    protected OptionsConfigurer configurer;
 
     public BaseSqoopxTool(OptionsConfigurer configurer){
         this.configurer = configurer;
@@ -33,12 +31,16 @@ public abstract class BaseSqoopxTool extends SqoopxTool {
      */
     protected boolean init(SqoopxOptions options) {
         options.setSqoopxTool(this);
-        this.connManager = new ConnFactory(options).getManager();
-        if(this.connManager == null){
-            throw new RuntimeException("Not support this connect string: " + options.getConnectString());
-        } else {
-            return true;
-        }
+        return true;
+    }
+
+    /**
+     * 构建任务执行上下文
+     * @param options
+     * @return
+     */
+    protected SqoopxJobContext buildContext(SqoopxOptions options){
+        return new SqoopxJobContext(options, this, metadataManager);
     }
 
     @Override
@@ -70,7 +72,11 @@ public abstract class BaseSqoopxTool extends SqoopxTool {
         }
     }
 
-    public ConnManager getConnManager() {
-        return connManager;
+    public MetadataManager getMetadataManager() {
+        return metadataManager;
+    }
+
+    public void setMetadataManager(MetadataManager metadataManager) {
+        this.metadataManager = metadataManager;
     }
 }
