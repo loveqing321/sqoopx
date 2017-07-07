@@ -126,24 +126,11 @@ public abstract class BaseJob implements SqoopxJob {
         // 添加依赖
         // 数据库驱动
         addToCache(Jars.getDriverClassJar(options), fs, localUrls);
-
-        String tmpjars = conf.get(ConfigurationConstants.MAPRED_DISTCACHE_CONF_PARAM);
-        StringBuilder sb = new StringBuilder();
-        if(localUrls.isEmpty()){
-            return;
-        }
-        if(tmpjars != null){
-            String[] elements = tmpjars.split(",");
-            for(String element : elements){
-                if(!element.isEmpty()){
-                    sb.append(element);
-                    sb.append(",");
-                }
-            }
-        }
-        sb.append(StringUtils.arrayToString(localUrls.toArray(new String[0])));
-        conf.set(ConfigurationConstants.MAPRED_DISTCACHE_CONF_PARAM, sb.toString());
+        // 设置tmpjars
+        setTmpJarsProperty(conf, localUrls);
     }
+
+
 
     /**
      * 8.执行job
@@ -163,12 +150,36 @@ public abstract class BaseJob implements SqoopxJob {
     public void cleanUp() throws IOException {}
 
     /**
+     * 设置tmpjars属性
+     * @param conf
+     * @param localUrls
+     */
+    protected void setTmpJarsProperty(Configuration conf, Set<String> localUrls){
+        String tmpjars = conf.get(ConfigurationConstants.MAPRED_DISTCACHE_CONF_PARAM);
+        StringBuilder sb = new StringBuilder();
+        if(localUrls.isEmpty()){
+            return;
+        }
+        if(tmpjars != null){
+            String[] elements = tmpjars.split(",");
+            for(String element : elements){
+                if(!element.isEmpty()){
+                    sb.append(element);
+                    sb.append(",");
+                }
+            }
+        }
+        sb.append(StringUtils.arrayToString(localUrls.toArray(new String[0])));
+        conf.set(ConfigurationConstants.MAPRED_DISTCACHE_CONF_PARAM, sb.toString());
+    }
+
+    /**
      * 将文件转换成文件系统路径，并存储在集合中
      * @param file
      * @param fs
      * @param localUrls
      */
-    private void addToCache(String file, FileSystem fs, Set<String> localUrls){
+    protected void addToCache(String file, FileSystem fs, Set<String> localUrls){
         if(file == null){
             return;
         }
@@ -183,7 +194,7 @@ public abstract class BaseJob implements SqoopxJob {
      * @param fs
      * @param localUrls
      */
-    private void addDirToCache(File dir, FileSystem fs, Set<String> localUrls, boolean recursive){
+    protected void addDirToCache(File dir, FileSystem fs, Set<String> localUrls, boolean recursive){
         if(dir == null){
             return;
         }

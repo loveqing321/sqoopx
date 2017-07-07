@@ -36,7 +36,7 @@ public abstract class BaseJarJob extends BaseJob {
         try {
             this.doRun(context);
         } finally {
-            this.cleanUp();
+//            this.cleanUp();
         }
     }
 

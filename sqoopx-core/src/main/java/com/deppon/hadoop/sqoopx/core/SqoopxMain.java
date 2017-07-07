@@ -41,6 +41,7 @@ public class SqoopxMain {
         System.setProperty("HADOOP_USER_NAME", "manager");
         // 配置sqoopx-site配置文件
         Configuration conf = setupSqoopxSite();
+
         // 添加其他配置
         // 配置log4j配置，保证本次执行job的日志输出
         String logFile = setupSqoopxLog4j(conf);
@@ -59,6 +60,7 @@ public class SqoopxMain {
         try {
             ToolRunner.run(sqoopx, Arrays.copyOfRange(args, 1, args.length));
         } catch (Exception e) {
+            System.out.println("执行出错！！");
             e.printStackTrace();
         } finally {
             String jobIds = extractJobIds(logFile, JOB_ID_PTNS);
