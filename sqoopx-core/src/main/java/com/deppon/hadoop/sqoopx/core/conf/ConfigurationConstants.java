@@ -139,4 +139,14 @@ public final class ConfigurationConstants {
      */
     public static final String COUNTER_MAP_INPUT_RECORDS = "MAP_INPUT_RECORDS";
 
+    /**
+     * hCat模式下的列与java类型的映射
+     */
+    public static final String HCAT_OUTPUT_COLTYPES_JAVA = "sqoopx.hcat.output.coltypes.java";
+
+    /**
+     * hCat模式下的列与sql类型的映射
+     */
+    public static final String HCAT_OUTPUT_COLTYPES_SQL = "sqoopx.hcat.output.coltypes.sql";
+
 }

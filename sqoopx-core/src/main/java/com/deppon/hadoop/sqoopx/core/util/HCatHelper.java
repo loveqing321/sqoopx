@@ -1,6 +1,8 @@
 package com.deppon.hadoop.sqoopx.core.util;
 
+import com.deppon.hadoop.sqoopx.core.metadata.MetadataManager;
 import com.deppon.hadoop.sqoopx.core.options.SqoopxOptions;
+import com.deppon.hadoop.sqoopx.core.tools.job.SqoopxJobContext;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hive.hcatalog.data.schema.HCatSchema;
 import org.apache.hive.hcatalog.mapreduce.HCatInputFormat;
@@ -17,9 +19,9 @@ public class HCatHelper {
 
     private static final String DEFHCATDB = "default";
 
-    private Job job;
-
     private SqoopxOptions options;
+
+    private MetadataManager metadataManager;
 
     private String hCatDatabaseName;
 
@@ -35,9 +37,9 @@ public class HCatHelper {
 
     private HCatSchema hCatFullTableSchema;
 
-    public HCatHelper(Job job, SqoopxOptions options){
-        this.job = job;
-        this.options = options;
+    public HCatHelper(SqoopxJobContext context){
+        this.options = context.getOptions();
+        this.metadataManager = context.getMetadataManager();
         this.init();
     }
 
@@ -77,18 +79,18 @@ public class HCatHelper {
     /**
      * 配置HCat的inputFormat
      */
-    public void configureHCatInputFormat() throws IOException {
-        // 1. 获取
+    public void configureHCatInputFormat(Job job) throws IOException {
+        // 1. 设置HCatInputFormat
         String filter = getHCatFilter();
         HCatInputFormat.setInput(job, hCatDatabaseName, hCatTableName, filter);
         hCatFullTableSchema = HCatInputFormat.getTableSchema(job.getConfiguration());
-        List<String> fieldNames = hCatFullTableSchema.getFieldNames();
+        job.setInputFormatClass(HCatInputFormat.class);
     }
 
     /**
      * @throws IOException
      */
-    public void configureHCatOutputFormat() throws IOException {
+    public void configureHCatOutputFormat(Job job) throws IOException {
         Map<String, String> filterMap = getHCatFilterMap();
         HCatOutputFormat.setOutput(job, OutputJobInfo.create(hCatDatabaseName, hCatTableName, filterMap));
         HCatSchema hCatOutputSchema = HCatOutputFormat.getTableSchema(job.getConfiguration());

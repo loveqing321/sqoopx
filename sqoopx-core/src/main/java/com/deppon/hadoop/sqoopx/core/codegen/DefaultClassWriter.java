@@ -72,6 +72,7 @@ public class DefaultClassWriter extends AbstractClassWriter {
         this.generateWritePsmt(classPool, generate);
         this.generateToString(classPool, generate);
         this.generateCompareTo(classPool, generate);
+        this.generateGetFieldMap(classPool, generate);
         return generate;
     }
 
@@ -360,6 +361,29 @@ public class DefaultClassWriter extends AbstractClassWriter {
             body.append(StringUtils.capitalize(compareColumns[i])).append("())");
         }
         body.append(";");
+        body.append("}");
+        method.setBody(body.toString());
+        clazz.addMethod(method);
+    }
+
+    /**
+     * 生成getFieldMap方法
+     * @param pool
+     * @param clazz
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     */
+    private void generateGetFieldMap(ClassPool pool, CtClass clazz) throws NotFoundException, CannotCompileException {
+        CtMethod method = new CtMethod(pool.get(Map.class.getName()), "getFieldMap", new CtClass[0], clazz);
+        StringBuilder body = new StringBuilder();
+        body.append("{");
+        body.append("Map __retMap = new HashMap();");
+        for(int i=0; i<columnNames.length; i++){
+            String col = columnNames[i];
+            String fieldName = IdentifierUtils.toJavaIdentifier(col);
+            body.append("__retMap.put(\"").append(col).append("\",").append(fieldName).append(");");
+        }
+        body.append("return __retMap;");
         body.append("}");
         method.setBody(body.toString());
         clazz.addMethod(method);
